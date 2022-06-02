@@ -20,14 +20,14 @@ class Tasks(models.Model):
     task_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=120)
     description = models.TextField()
-    due_date = models.DateTimeField(null=True)
-    priority = models.IntegerField(MaxValueValidator(5), MinValueValidator(1), null=True)
-    task_list_id = models.ForeignKey("task_list_id", on_delete=CASCADE)
-
+    due_date = models.DateTimeField()
+    priority = models.IntegerField(null=True,  validators=[MaxValueValidator(5), MinValueValidator(1)])
+    task_list_id = models.ForeignKey("Task_List", on_delete=models.CASCADE)
+    
     def _str_(self):
         return self.title
 
 class User_TaskList(models.Model):
-    username = models.ForeignKey("username", on_delete=CASCADE)
-    task_list_id = models.ForeignKey("task_list_id", on_delete=CASCADE)
+    username = models.ForeignKey("Users", on_delete=models.CASCADE)
+    task_list_id = models.ForeignKey("Task_List", on_delete=models.CASCADE)
 
