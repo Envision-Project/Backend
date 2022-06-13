@@ -21,6 +21,9 @@ from main import views
 router = routers.DefaultRouter()
 router.register(r'tasks', views.TasksViewSet, 'task')
 router.register(r'tasklist', views.TaskListViewSet, 'tasklist')
+router.register(r'login', views.RegistrationViewSet, 'register')
+router.register(r'register', views.LoginViewSet, 'login')
+router.register(r'refresh', views.RefreshViewSet, 'refresh')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
