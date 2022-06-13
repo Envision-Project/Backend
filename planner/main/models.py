@@ -38,7 +38,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(db_index=True, max_length=255, unique=True)
+    username = models.CharField(primary_key=True, db_index=True, max_length=255, unique=True)
     email = models.EmailField(db_index=True, unique=True,  null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -50,13 +50,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.email}"
-
-# Create your models here.
-#class Users(models.Model):
-#    username = models.CharField(max_length=100, primary_key=True)
-#    password = models.CharField(max_length=200)
-#    name = models.CharField(max_length=200)
-
+        
 class Task_List(models.Model):
     task_list_id = models.AutoField(primary_key=True)
     task_list_name = models.CharField(max_length=120)
@@ -77,6 +71,6 @@ class Tasks(models.Model):
         return self.title
 
 class User_TaskList(models.Model):
-    #username = models.ForeignKey("Users", on_delete=models.CASCADE)
+    username = models.ForeignKey("User", on_delete=models.CASCADE)
     task_list_id = models.ForeignKey("Task_List", on_delete=models.CASCADE)
 
