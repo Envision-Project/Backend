@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import viewsets, status, filters
 from .serializers import TasksSerializer, TaskListSerializer, UserSerializer, LoginSerializer, RegisterSerializer
 from .models import Tasks, Task_List, User
@@ -92,3 +92,60 @@ class TasksViewSet(viewsets.ModelViewSet):
 class TaskListViewSet(viewsets.ModelViewSet):
     serializer_class = TaskListSerializer
     queryset = Task_List.objects.all()
+
+def addTask(request):
+    serializer = TasksSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response("Success")
+    else:
+        return Response(serializer.errors)
+
+def addTaskList(request):
+    serializer = TaskListSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response("Success")
+    else:
+        return Response(serializer.errors)
+
+def updateTask(request, task_id, field, value):
+    task_id = int(task_id)
+
+    try:
+        task_sel = Tasks.objects.get(task_id = task_id)
+    except Tasks.DoesNotExist:
+        return redirect('index')
+    
+    task_sel.field = value
+    task_sel.save()
+
+def updateTaskList(request, task_list_id, field, value):
+    task_list_id = int(task_list_id)
+
+    try:
+        taskList_sel = Task_List.objects.get(task_list_id = task_list_id)
+    except Task_List.DoesNotExist:
+        return redirect('index')
+    
+    taskList_sel.field = value
+    taskList_sel.save()
+
+def deleteTask(request, task_id):
+    task_id = int(task_id)
+    try:
+        task_sel = Tasks.objects.get(task_id = task_id)
+    except Tasks.DoesNotExist:
+        return redirect('index')
+    task_sel.delete()
+    return redirect('index')
+
+def deleteTaskList(request, task_list_id):
+    task_list_id = int(task_list_id)
+    try:
+        task_list_sel = Task_List.objects.get(task_list_id = task_list_id)
+    except Task_List.DoesNotExist:
+        return redirect('index')
+    task_list_sel.delete()
+    return redirect('index')
+
