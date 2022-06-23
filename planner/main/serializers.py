@@ -11,8 +11,9 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'is_active', 'created', 'updated']
-        read_only_field = ['is_active', 'created', 'updated']
+        # fields = ['id', 'username', 'email', 'is_active', 'created', 'updated']
+        fields = ['username', 'email', 'is_active']
+        # read_only_field = ['is_active', 'created', 'updated']
 
 class TasksSerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,7 +47,7 @@ class RegisterSerializer(UserSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'is_active']
+        fields = ['username', 'email', 'password', 'is_active']
 
     def create(self, validated_data):
         try:

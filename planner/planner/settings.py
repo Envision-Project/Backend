@@ -80,6 +80,10 @@ REST_FRAMEWORK = {
     )
 }
 
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'username'
+}
+
 WSGI_APPLICATION = 'planner.wsgi.application'
 
 
