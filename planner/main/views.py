@@ -85,68 +85,75 @@ class UserViewSet(viewsets.ModelViewSet):
         return obj
 
 # Create your views here.
-class TasksViewSet(viewsets.ModelViewSet):
-    serializer_class = TasksSerializer
-    queryset = Tasks.objects.all()
+def TaskViews(request):
+    if request.method == "GET":
+        queryset = Tasks.objects.all()
+        return JsonResponse(list(queryset.values()), safe=False)
+
+    if request.method == "POST":
+        serializer = TasksSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response("Success")
+        else:
+            return Response(serializer.errors)
+
+    if request.method == "DELETE":
+        task_id = int(task_id)
+        try:
+            task_sel = Tasks.objects.get(task_id = task_id)
+        except Tasks.DoesNotExist:
+            return redirect('index')
+        task_sel.delete()
+        return redirect('index')
+
+    if request.method == "PUT":
+        data = request.data
+        task_id = int(data.task_id)
+        field = data.field
+        value = data.value
+
+        try:
+            task_sel = Tasks.objects.get(task_id = task_id)  
+        except Tasks.DoesNotExist:
+            return redirect('index')
+    
+        task_sel.field = value
+        task_sel.save()
 
 def TaskListViews(request):
-    if request == "GET":
-        serializer_class = TaskListSerializer
+    if request.method == "GET":
         queryset = Task_List.objects.all()
+        return JsonResponse(list(queryset.values()), safe=False)
 
-def addTask(request):
-    serializer = TasksSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response("Success")
-    else:
-        return Response(serializer.errors)
+    if request.method == "POST":
+        serializer = TaskListSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse("Success")
+        else:
+            return JsonResponse(serializer.errors)
 
-def addTaskList(request):
-    serializer = TaskListSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response("Success")
-    else:
-        return Response(serializer.errors)
-
-def updateTask(request, task_id, field, value):
-    task_id = int(task_id)
-
-    try:
-        task_sel = Tasks.objects.get(task_id = task_id)
-    except Tasks.DoesNotExist:
+    if request.method == "DELETE":
+        task_list_id = int(task_list_id) 
+        try:
+            task_list_sel = Task_List.objects.get(task_list_id = task_list_id)
+        except Task_List.DoesNotExist:
+            return redirect('index')
+        task_list_sel.delete()
         return redirect('index')
+
+    if request.method == "PUT":
+        data = request.data
+        task_list_id = int(data.task_list_id)
+        field = data.field
+        value = data.value
+
+        try:
+            taskList_sel = Task_List.objects.get(task_list_id = task_list_id)
+        except Task_List.DoesNotExist:
+            return redirect('index')
     
-    task_sel.field = value
-    task_sel.save()
-
-def updateTaskList(request, task_list_id, field, value):
-    task_list_id = int(task_list_id)
-
-    try:
-        taskList_sel = Task_List.objects.get(task_list_id = task_list_id)
-    except Task_List.DoesNotExist:
-        return redirect('index')
-    
-    taskList_sel.field = value
-    taskList_sel.save()
-
-def deleteTask(request, task_id):
-    task_id = int(task_id)
-    try:
-        task_sel = Tasks.objects.get(task_id = task_id)
-    except Tasks.DoesNotExist:
-        return redirect('index')
-    task_sel.delete()
-    return redirect('index')
-
-def deleteTaskList(request, task_list_id):
-    task_list_id = int(task_list_id)
-    try:
-        task_list_sel = Task_List.objects.get(task_list_id = task_list_id)
-    except Task_List.DoesNotExist:
-        return redirect('index')
-    task_list_sel.delete()
-    return redirect('index')
+        taskList_sel.field = value
+        taskList_sel.save()
 

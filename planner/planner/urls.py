@@ -19,8 +19,6 @@ from rest_framework import routers
 from main import views
 
 router = routers.DefaultRouter()
-router.register(r'tasks', views.TasksViewSet, 'task')
-router.register(r'tasklist', views.TaskListViews, 'tasklist')
 router.register(r'register', views.RegistrationViewSet, 'register')
 router.register(r'login', views.LoginViewSet, 'login')
 router.register(r'refresh', views.RefreshViewSet, 'refresh')
@@ -28,10 +26,6 @@ router.register(r'refresh', views.RefreshViewSet, 'refresh')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('addTask/', views.addTask),
-    path('deleteTask', views.deleteTask),
-    path('addTaskList', views.addTaskList),
-    path('deleteTaskList', views.deleteTaskList),
-    path('updateTask', views.updateTask),
-    path('updateTaskList', views.updateTaskList)
+    path('tasklist/', views.TaskListViews),
+    path('task/', views.TaskViews),
 ]
