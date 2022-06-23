@@ -89,9 +89,10 @@ class TasksViewSet(viewsets.ModelViewSet):
     serializer_class = TasksSerializer
     queryset = Tasks.objects.all()
 
-class TaskListViewSet(viewsets.ModelViewSet):
-    serializer_class = TaskListSerializer
-    queryset = Task_List.objects.all()
+def TaskListViews(request):
+    if request == "GET":
+        serializer_class = TaskListSerializer
+        queryset = Task_List.objects.all()
 
 def addTask(request):
     serializer = TasksSerializer(data=request.data)
