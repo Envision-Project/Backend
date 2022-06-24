@@ -10,6 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from rest_framework.decorators import api_view
 
 class LoginViewSet(ModelViewSet, TokenObtainPairView):
     serializer_class = LoginSerializer
@@ -90,7 +91,7 @@ def TaskViews(request):
         queryset = Tasks.objects.all()
         return JsonResponse(list(queryset.values()), safe=False)
 
-    if request.method == "POST":
+    if request.method == "POST" or request.method == "PUT":
         serializer = TasksSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -98,35 +99,21 @@ def TaskViews(request):
         else:
             return Response(serializer.errors)
 
-    if request.method == "DELETE":
-        task_id = int(task_id)
-        try:
-            task_sel = Tasks.objects.get(task_id = task_id)
-        except Tasks.DoesNotExist:
-            return redirect('index')
-        task_sel.delete()
-        return redirect('index')
-
-    if request.method == "PUT":
-        data = request.data
-        task_id = int(data.task_id)
-        field = data.field
-        value = data.value
-
-        try:
-            task_sel = Tasks.objects.get(task_id = task_id)  
-        except Tasks.DoesNotExist:
-            return redirect('index')
-    
-        task_sel.field = value
-        task_sel.save()
+def DeleteTask(request):
+    task_id = int(task_id)
+    try:
+        task_sel = Tasks.objects.get(task_id = task_id)
+    except Tasks.DoesNotExist:
+        return Response("Deleted successfully")
+    task_sel.delete()
+    return Response("Could not delete")
 
 def TaskListViews(request):
     if request.method == "GET":
         queryset = Task_List.objects.all()
         return JsonResponse(list(queryset.values()), safe=False)
 
-    if request.method == "POST":
+    if request.method == "POST" or request.method == "PUT":
         serializer = TaskListSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -134,6 +121,7 @@ def TaskListViews(request):
         else:
             return JsonResponse(serializer.errors)
 
+def DeleteTaskList(request):
     if request.method == "DELETE":
         task_list_id = int(task_list_id) 
         try:
@@ -142,18 +130,4 @@ def TaskListViews(request):
             return redirect('index')
         task_list_sel.delete()
         return redirect('index')
-
-    if request.method == "PUT":
-        data = request.data
-        task_list_id = int(data.task_list_id)
-        field = data.field
-        value = data.value
-
-        try:
-            taskList_sel = Task_List.objects.get(task_list_id = task_list_id)
-        except Task_List.DoesNotExist:
-            return redirect('index')
-    
-        taskList_sel.field = value
-        taskList_sel.save()
 

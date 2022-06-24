@@ -26,6 +26,6 @@ router.register(r'refresh', views.RefreshViewSet, 'refresh')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('tasklist/', views.TaskListViews),
+    path('tasklist/<int:id>', views.TaskListViews),
     path('task/', views.TaskViews),
 ]
